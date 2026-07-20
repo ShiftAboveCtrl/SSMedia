@@ -82,16 +82,6 @@ For comprehensive legal information, including our full disclaimer, third-party 
 * Retrofit (Networking)
 * Gradle
 
-## Star History
-
-<a href="https://www.star-history.com/#ShiftAboveCtrl/SSMedia&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ShiftAboveCtrl/SSMedia&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ShiftAboveCtrl/SSMedia&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ShiftAboveCtrl/SSMedia&type=date&legend=top-left" />
- </picture>
-</a>
-
 <!-- MARKDOWN LINKS & IMAGES -->
 [contributors-shield]: https://img.shields.io/github/contributors/ShiftAboveCtrl/SSMedia.svg?style=for-the-badge
 [contributors-url]: https://github.com/ShiftAboveCtrl/SSMedia/graphs/contributors
