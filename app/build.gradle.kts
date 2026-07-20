@@ -60,11 +60,7 @@ val doviEnableRealLink = parseBooleanProperty(
 val realtimeSyncEnabled = parseBooleanProperty(
     resolveProperty(devProperties, localProperties, "NUVIO_REALTIME_SYNC_ENABLED", "true")
 )
-val selfHosted = parseBooleanProperty(
-    providers.gradleProperty("SELF_HOSTED").orNull
-        ?: providers.environmentVariable("SELF_HOSTED").orNull
-        ?: resolveProperty(devProperties, localProperties, "SELF_HOSTED")
-)
+val selfHosted = true
 val doviStaticLibPath = resolveProperty(devProperties, localProperties, "DOVI_LIBDOVI_STATIC_LIB")
 val doviIncludeDirPath = resolveProperty(devProperties, localProperties, "DOVI_LIBDOVI_INCLUDE_DIR")
 val doviPrebuiltRootPath = resolveProperty(devProperties, localProperties, "DOVI_LIBDOVI_PREBUILT_ROOT")
