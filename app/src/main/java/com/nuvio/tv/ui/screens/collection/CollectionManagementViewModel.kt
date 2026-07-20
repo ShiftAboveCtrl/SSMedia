@@ -268,8 +268,8 @@ class CollectionManagementViewModel @Inject constructor(
                     val resolver = context.contentResolver
                     val uri = android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI
                     val projection = arrayOf(android.provider.MediaStore.Downloads._ID)
-                    val selection = "${android.provider.MediaStore.Downloads.DISPLAY_NAME} = ?"
-                    val selectionArgs = arrayOf("nuvio-collections.json")
+                    val selection = "${android.provider.MediaStore.Downloads.DISPLAY_NAME} IN (?, ?)"
+                    val selectionArgs = arrayOf("subless-collections.json", "nuvio-collections.json")
                     resolver.query(uri, projection, selection, selectionArgs, null)?.use { cursor ->
                         if (cursor.moveToFirst()) {
                             val id = cursor.getLong(cursor.getColumnIndexOrThrow(android.provider.MediaStore.Downloads._ID))

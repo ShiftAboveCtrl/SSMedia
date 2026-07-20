@@ -94,14 +94,22 @@ val useLocalFfmpegDecoder = truthy(
         ?: env("USE_LOCAL_FFMPEG_DECODER")
         ?: localProperties.getProperty("USE_LOCAL_FFMPEG_DECODER")
 )
-val releaseStoreFilePath = env("NUVIO_RELEASE_STORE_FILE")
+val releaseStoreFilePath = env("SUBLESS_RELEASE_STORE_FILE")
+    ?: env("NUVIO_RELEASE_STORE_FILE")
+    ?: localProperties.getProperty("SUBLESS_RELEASE_STORE_FILE")
     ?: localProperties.getProperty("NUVIO_RELEASE_STORE_FILE")
-val releaseKeyAliasValue = env("NUVIO_RELEASE_KEY_ALIAS")
-    ?: localProperties.getProperty("NUVIO_RELEASE_KEY_ALIAS", "nuviotv")
-val releaseKeyPasswordValue = env("NUVIO_RELEASE_KEY_PASSWORD")
-    ?: localProperties.getProperty("NUVIO_RELEASE_KEY_PASSWORD", "815787")
-val releaseStorePasswordValue = env("NUVIO_RELEASE_STORE_PASSWORD")
-    ?: localProperties.getProperty("NUVIO_RELEASE_STORE_PASSWORD", "815787")
+val releaseKeyAliasValue = env("SUBLESS_RELEASE_KEY_ALIAS")
+    ?: env("NUVIO_RELEASE_KEY_ALIAS")
+    ?: localProperties.getProperty("SUBLESS_RELEASE_KEY_ALIAS")
+    ?: localProperties.getProperty("NUVIO_RELEASE_KEY_ALIAS", "subless")
+val releaseKeyPasswordValue = env("SUBLESS_RELEASE_KEY_PASSWORD")
+    ?: env("NUVIO_RELEASE_KEY_PASSWORD")
+    ?: localProperties.getProperty("SUBLESS_RELEASE_KEY_PASSWORD")
+    ?: localProperties.getProperty("NUVIO_RELEASE_KEY_PASSWORD", "")
+val releaseStorePasswordValue = env("SUBLESS_RELEASE_STORE_PASSWORD")
+    ?: env("NUVIO_RELEASE_STORE_PASSWORD")
+    ?: localProperties.getProperty("SUBLESS_RELEASE_STORE_PASSWORD")
+    ?: localProperties.getProperty("NUVIO_RELEASE_STORE_PASSWORD", "")
 
 android {
     namespace = "com.nuvio.tv"
@@ -112,8 +120,8 @@ android {
         applicationId = "com.nuvio.tv"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1036
-        versionName = "0.7.18-beta"
+        versionCode = 1037
+        versionName = "1.0.0-subless"
 
         buildConfigField("String", "PARENTAL_GUIDE_API_URL", "\"${localProperties.getProperty("PARENTAL_GUIDE_API_URL", "")}\"")
         buildConfigField("String", "INTRODB_API_URL", "\"${localProperties.getProperty("INTRODB_API_URL", "")}\"")
@@ -152,8 +160,8 @@ android {
         buildConfigField("String", "SENTRY_DSN", buildConfigString(sentryDsn))
 
         // In-app updater (GitHub Releases)
-        buildConfigField("String", "GITHUB_OWNER", "\"tapframe\"")
-        buildConfigField("String", "GITHUB_REPO", "\"NuvioTV\"")
+        buildConfigField("String", "GITHUB_OWNER", "\"ShiftAboveCtrl\"")
+        buildConfigField("String", "GITHUB_REPO", "\"SSMedia\"")
     }
 
     flavorDimensions += "distribution"
@@ -187,14 +195,14 @@ android {
         create("release") {
             keyAlias = releaseKeyAliasValue
             keyPassword = releaseKeyPasswordValue
-            storeFile = releaseStoreFilePath?.let(::file) ?: file("../nuviotv.jks")
+            storeFile = releaseStoreFilePath?.let(::file) ?: file("../subless.jks")
             storePassword = releaseStorePasswordValue
         }
     }
 
     buildTypes {
         debug {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
             isDebuggable = false
             isMinifyEnabled = false
 

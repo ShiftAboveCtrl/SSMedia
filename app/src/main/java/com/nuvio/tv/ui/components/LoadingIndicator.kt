@@ -31,7 +31,7 @@ fun LoadingIndicator(
         contentAlignment = Alignment.Center
     ) {
         val composition by rememberLottieComposition(
-            LottieCompositionSpec.RawRes(R.raw.nuvio_loading_indicator)
+            LottieCompositionSpec.RawRes(R.raw.subless_loading_indicator)
         )
         val progress by animateLottieCompositionAsState(
             composition = composition,

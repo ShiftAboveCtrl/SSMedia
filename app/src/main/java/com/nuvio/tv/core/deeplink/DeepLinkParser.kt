@@ -16,7 +16,7 @@ object DeepLinkParser {
                 null
             }
         }
-        if (scheme != "nuvio") return null
+        if (scheme != "subless" && scheme != "nuvio") return null
 
         val host = parsedUrl.host?.lowercase().orEmpty()
         val pathSegments = parsedUrl.rawPath

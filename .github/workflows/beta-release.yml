@@ -1,4 +1,4 @@
-name: Beta Release
+name: Subless Release
 
 on:
   workflow_dispatch:
@@ -50,11 +50,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: beta-release-${{ github.ref }}
+  group: subless-release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  beta-release:
+  subless-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -63,6 +63,9 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref_name }}
+
+      - name: Verify Subless branding
+        run: python3 scripts/audit_subless_branding.py
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -91,22 +94,29 @@ jobs:
       - name: Prepare signing config
         if: ${{ inputs.release_mode != 'dry_run' }}
         env:
-          RELEASE_KEYSTORE_BASE64: ${{ secrets.NUVIO_RELEASE_KEYSTORE_BASE64 }}
-          RELEASE_KEY_ALIAS: ${{ secrets.NUVIO_RELEASE_KEY_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ secrets.NUVIO_RELEASE_KEY_PASSWORD }}
-          RELEASE_STORE_PASSWORD: ${{ secrets.NUVIO_RELEASE_STORE_PASSWORD }}
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.SUBLESS_RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEY_ALIAS: ${{ secrets.SUBLESS_RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.SUBLESS_RELEASE_KEY_PASSWORD }}
+          RELEASE_STORE_PASSWORD: ${{ secrets.SUBLESS_RELEASE_STORE_PASSWORD }}
         run: |
-          if [ -n "$RELEASE_KEYSTORE_BASE64" ]; then
-            echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/nuviotv.jks"
-            {
-              echo "NUVIO_RELEASE_STORE_FILE=$RUNNER_TEMP/nuviotv.jks"
-              echo "NUVIO_RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS"
-              echo "NUVIO_RELEASE_KEY_PASSWORD=$RELEASE_KEY_PASSWORD"
-              echo "NUVIO_RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD"
-            } >> "$GITHUB_ENV"
-          else
-            echo "CI_USE_DEBUG_SIGNING=true" >> "$GITHUB_ENV"
+          missing=()
+          [ -n "$RELEASE_KEYSTORE_BASE64" ] || missing+=(SUBLESS_RELEASE_KEYSTORE_BASE64)
+          [ -n "$RELEASE_KEY_ALIAS" ] || missing+=(SUBLESS_RELEASE_KEY_ALIAS)
+          [ -n "$RELEASE_KEY_PASSWORD" ] || missing+=(SUBLESS_RELEASE_KEY_PASSWORD)
+          [ -n "$RELEASE_STORE_PASSWORD" ] || missing+=(SUBLESS_RELEASE_STORE_PASSWORD)
+
+          if [ ${#missing[@]} -gt 0 ]; then
+            printf 'Missing required GitHub Actions secret: %s\n' "${missing[@]}" >&2
+            exit 1
           fi
+
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/subless-release.jks"
+          {
+            echo "SUBLESS_RELEASE_STORE_FILE=$RUNNER_TEMP/subless-release.jks"
+            echo "SUBLESS_RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS"
+            echo "SUBLESS_RELEASE_KEY_PASSWORD=$RELEASE_KEY_PASSWORD"
+            echo "SUBLESS_RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD"
+          } >> "$GITHUB_ENV"
 
       - name: Preview beta release
         if: ${{ inputs.release_mode == 'dry_run' }}

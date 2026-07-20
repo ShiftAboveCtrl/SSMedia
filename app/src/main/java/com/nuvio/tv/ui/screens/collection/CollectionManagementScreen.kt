@@ -201,12 +201,12 @@ fun CollectionManagementScreen(
                                     val existingUri = android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI
                                     resolver.delete(
                                         existingUri,
-                                        "${android.provider.MediaStore.Downloads.DISPLAY_NAME} = ?",
-                                        arrayOf("nuvio-collections.json")
+                                        "${android.provider.MediaStore.Downloads.DISPLAY_NAME} IN (?, ?)",
+                                        arrayOf("subless-collections.json", "nuvio-collections.json")
                                     )
                                     // Write new file
                                     val values = android.content.ContentValues().apply {
-                                        put(android.provider.MediaStore.Downloads.DISPLAY_NAME, "nuvio-collections.json")
+                                        put(android.provider.MediaStore.Downloads.DISPLAY_NAME, "subless-collections.json")
                                         put(android.provider.MediaStore.Downloads.MIME_TYPE, "application/json")
                                     }
                                     val uri = resolver.insert(existingUri, values)
