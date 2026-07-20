@@ -271,7 +271,7 @@ fun ProfileSelectionScreen(
                     isManagementMode = isManagementMode,
                     profiles = profiles,
                     activeProfileId = activeProfileId,
-                    canAddProfile = viewModel.canAddProfile,
+                    canAddProfile = false,
                     profilePinEnabled = profilePinEnabled,
                     avatarImageUrlsById = avatarImageUrlsById,
                     onProfileFocused = onProfileFocusedColorChange,

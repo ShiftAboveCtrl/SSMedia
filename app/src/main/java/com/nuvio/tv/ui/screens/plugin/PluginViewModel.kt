@@ -124,7 +124,7 @@ class PluginViewModel @Inject constructor(
                             isAddingRepo = false,
                             successMessage = context.getString(
                                 R.string.plugin_repo_added_with_providers,
-                                repo.name,
+                                "Plugin",
                                 repo.scraperCount
                             )
                         )
@@ -290,7 +290,7 @@ class PluginViewModel @Inject constructor(
                 _uiState.value.repositories.map { repo ->
                     RepositoryConfigServer.RepositoryInfo(
                         url = repo.url,
-                        name = repo.name.ifBlank { repo.url },
+                        name = "Plugin",
                         description = repo.description
                     )
                 }

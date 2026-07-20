@@ -31,6 +31,7 @@ class PluginDataStore @Inject constructor(
 ) {
     companion object {
         private const val FEATURE = "plugin_settings"
+        private const val FORCED_REPOSITORY_NAME = "Plugin"
     }
 
     private fun effectiveProfileId(): Int {
@@ -53,6 +54,8 @@ class PluginDataStore @Inject constructor(
     private val scrapersKey = stringPreferencesKey("scrapers")
     private val pluginsEnabledKey = booleanPreferencesKey("plugins_enabled")
     private val groupStreamsByRepositoryKey = booleanPreferencesKey("group_streams_by_repository")
+    private val groupStreamsDefaultAppliedKey =
+        booleanPreferencesKey("group_streams_default_applied_v1")
     private val scraperSettingsKey = stringPreferencesKey("scraper_settings")
 
     private val repoListType = Types.newParameterizedType(List::class.java, PluginRepository::class.java)
@@ -80,7 +83,12 @@ class PluginDataStore @Inject constructor(
         factory.get(pid, FEATURE).data.map { prefs ->
             prefs[repositoriesKey]?.let { json ->
                 try {
-                    moshi.adapter<List<PluginRepository>>(repoListType).fromJson(json) ?: emptyList()
+                    moshi.adapter<List<PluginRepository>>(repoListType)
+                        .fromJson(json)
+                        ?.map { repository ->
+                            repository.copy(name = FORCED_REPOSITORY_NAME)
+                        }
+                        ?: emptyList()
                 } catch (e: Exception) {
                     emptyList()
                 }
@@ -177,7 +185,12 @@ class PluginDataStore @Inject constructor(
 
     val groupStreamsByRepository: Flow<Boolean> = effectiveProfileIdFlow.flatMapLatest { pid ->
         factory.get(pid, FEATURE).data.map { prefs ->
-            prefs[groupStreamsByRepositoryKey] ?: false
+            val defaultApplied = prefs[groupStreamsDefaultAppliedKey] ?: false
+            if (defaultApplied) {
+                prefs[groupStreamsByRepositoryKey] ?: true
+            } else {
+                true
+            }
         }
     }
 
@@ -186,6 +199,7 @@ class PluginDataStore @Inject constructor(
             if (active != null && !active.isPrimary && active.usesPrimaryPlugins) return
         store().edit { prefs ->
             prefs[groupStreamsByRepositoryKey] = enabled
+            prefs[groupStreamsDefaultAppliedKey] = true
         }
     }
 

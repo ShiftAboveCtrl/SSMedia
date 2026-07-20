@@ -58,6 +58,7 @@ private const val MAX_RESPONSE_SIZE = 5 * 1024 * 1024L
 // cancelling the runner's coroutine before it can return accumulated links.
 private const val SCRAPER_TIMEOUT_MS = 120_000L
 private const val MANIFEST_SUFFIX = "/manifest.json"
+private const val FORCED_REPOSITORY_NAME = "Plugin"
 
 @Singleton
 class PluginManager @Inject constructor(
@@ -391,7 +392,7 @@ class PluginManager @Inject constructor(
     ): Result<PluginRepository> {
         val repo = PluginRepository(
             id = UUID.randomUUID().toString(),
-            name = manifest.name,
+            name = FORCED_REPOSITORY_NAME,
             url = canonicalManifestUrl,
             enabled = true,
             lastUpdated = System.currentTimeMillis(),
@@ -421,7 +422,7 @@ class PluginManager @Inject constructor(
 
         val repo = PluginRepository(
             id = UUID.randomUUID().toString(),
-            name = parseResult.name,
+            name = FORCED_REPOSITORY_NAME,
             url = repoUrl,
             description = parseResult.description,
             enabled = true,
@@ -562,7 +563,7 @@ class PluginManager @Inject constructor(
 
             // Update repository
             val updatedRepo = repo.copy(
-                name = manifest.name,
+                name = FORCED_REPOSITORY_NAME,
                 lastUpdated = System.currentTimeMillis(),
                 scraperCount = manifest.scrapers.size
             )
@@ -587,7 +588,7 @@ class PluginManager @Inject constructor(
         oldScrapers.forEach { externalExtensionLoader.evictCache(it.id) }
 
         val updatedRepo = repo.copy(
-            name = parseResult.name,
+            name = FORCED_REPOSITORY_NAME,
             lastUpdated = System.currentTimeMillis(),
             scraperCount = parseResult.plugins.size
         )

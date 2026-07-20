@@ -87,6 +87,42 @@ for relative, forbidden in public_patterns.items():
         if token in text:
             errors.append(f"{relative}: contains forbidden public token {token!r}")
 
+required_subless_policy: dict[str, tuple[str, ...]] = {
+    "app/src/main/java/com/nuvio/tv/ui/screens/library/LibraryScreen.kt": (
+        "val viewMode = LibraryViewMode.Saved",
+    ),
+    "app/src/main/java/com/nuvio/tv/ui/screens/settings/SettingsScreen.kt": (
+        "SettingsCategory.TRAKT -> false",
+    ),
+    "app/src/main/java/com/nuvio/tv/ui/screens/profile/ProfileSelectionScreen.kt": (
+        "canAddProfile = false",
+    ),
+    "app/src/main/java/com/nuvio/tv/data/local/PluginDataStore.kt": (
+        'private const val FORCED_REPOSITORY_NAME = "Plugin"',
+        "groupStreamsDefaultAppliedKey",
+        "prefs[groupStreamsDefaultAppliedKey] = true",
+    ),
+    "app/src/full/java/com/nuvio/tv/core/plugin/PluginManager.kt": (
+        'private const val FORCED_REPOSITORY_NAME = "Plugin"',
+        "name = FORCED_REPOSITORY_NAME",
+    ),
+    "app/src/main/java/com/nuvio/tv/ui/screens/plugin/PluginScreen.kt": (
+        'text = "Plugin"',
+    ),
+}
+
+for relative, required in required_subless_policy.items():
+    path = ROOT / relative
+    if not path.exists():
+        errors.append(f"Missing managed-policy file: {relative}")
+        continue
+    text = path.read_text(encoding="utf-8")
+    for token in required:
+        if token not in text:
+            errors.append(
+                f"{relative}: required managed-policy token is missing {token!r}"
+            )
+
 old_raw = ROOT / "app/src/main/res/raw/nuvio_loading_indicator.json"
 if old_raw.exists():
     errors.append(f"Legacy branded runtime resource still exists: {old_raw.relative_to(ROOT)}")

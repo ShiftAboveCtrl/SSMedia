@@ -1099,7 +1099,7 @@ private fun RepositoryCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = repository.name,
+                    text = "Plugin",
                     style = MaterialTheme.typography.titleMedium,
                     color = NuvioTheme.colors.TextPrimary
                 )

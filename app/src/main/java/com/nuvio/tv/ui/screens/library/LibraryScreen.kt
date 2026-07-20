@@ -124,7 +124,7 @@ fun LibraryScreen(
     val watchedSeriesIds by viewModel.watchedSeriesIds.collectAsState()
     var showDeleteConfirm by remember { mutableStateOf(false) }
     var expandedPicker by remember { mutableStateOf<String?>(null) }
-    var viewMode by rememberSaveable { mutableStateOf(LibraryViewMode.Saved) }
+    val viewMode = LibraryViewMode.Saved
     var activeCloudItem by remember { mutableStateOf<CloudLibraryItem?>(null) }
     val primaryFocusRequester = remember { FocusRequester() }
     val selectorFocusRequester = remember { FocusRequester() }
@@ -276,17 +276,6 @@ fun LibraryScreen(
                     letterSpacing = 2.sp
                 )
             }
-        }
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            LibraryViewModeRow(
-                selectedMode = viewMode,
-                primaryFocusRequester = primaryFocusRequester,
-                onSelected = { mode ->
-                    viewMode = mode
-                    expandedPicker = null
-                }
-            )
         }
 
         if (viewMode == LibraryViewMode.Saved) {

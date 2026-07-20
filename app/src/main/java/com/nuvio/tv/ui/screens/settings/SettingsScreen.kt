@@ -263,6 +263,7 @@ fun SettingsScreen(
         allSectionSpecs.filter { section ->
             when (section.category) {
                 SettingsCategory.EXPERIENCE -> false
+                SettingsCategory.TRAKT -> false
                 SettingsCategory.DEBUG -> BuildConfig.IS_DEBUG_BUILD && !isEssentialMode
                 SettingsCategory.PROFILES -> isPrimaryProfileActive
                 SettingsCategory.ACCOUNT -> isPrimaryProfileActive
